@@ -23,6 +23,7 @@ async function run(){
     await client.connect();
     const itemCollection = client.db('bengalDish').collection('mealItems');
    
+   //Get items 
     app.get('/items', async (req, res) =>{
       const query = {};
       const cursor = itemCollection.find(query);
@@ -30,6 +31,7 @@ async function run(){
       res.send(items);
     });
 
+    //Get single item
     app.get('/item/:id', async(req, res) =>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)}
@@ -37,12 +39,20 @@ async function run(){
       res.send(item);
     });
 
+    //Post item
     app.post('/item', async(req, res) =>{
       const newItem = req.body;
       const result = await itemCollection.insertOne(newItem);
       res.send(result);
     })
 
+    //Delete item
+    app.delete('/item/:id', async(req, res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const result = await itemCollection.deleteOne(query);
+      res.send(result);
+    })
 
   }
   finally{
