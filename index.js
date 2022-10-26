@@ -50,8 +50,16 @@ async function run(){
     app.delete('/item/:id', async(req, res) =>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
-      const result = await itemCollection.deleteOne(query);
-      res.send(result);
+      const deletedItem = await itemCollection.deleteOne(query);
+      res.send(deletedItem);
+    })
+
+    //count item
+    app.get('/itemCount', async (req, res) =>{
+      const query = {};
+      const cursor = itemCollection.find(query);
+      const countItem = await cursor.count();
+      res.send({countItem});
     })
 
   }
