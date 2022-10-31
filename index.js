@@ -58,14 +58,16 @@ async function run(){
 
     app.get('/product', async (req, res) =>{
       console.log('query: ', req.query);
+
       const page = parseInt(req.query.page);
-      const pageSize = parseInt(req.query.pageSize);
+      const size = parseInt(req.query.size);
       const query = {};
       const cursor = itemCollection.find(query);
 
       let products;
-      if(page || pageSize){
-        products = await cursor.skip(page*pageSize).limit(pageSize).toArray();
+
+      if(page || size){
+        products = await cursor.skip(page*size).limit(size).toArray();
       }else{
         products = await cursor.toArray();
       }
@@ -75,9 +77,7 @@ async function run(){
 
     //count item
     app.get('/itemCount', async (req, res) =>{
-      const query = {};
-      const cursor = itemCollection.find(query);
-      const countItem = await cursor.count();
+      const countItem = await itemCollection.estimatedDocumentCount();
       res.send({countItem});
     })
 
