@@ -25,18 +25,9 @@ async function run(){
    
    //Get items 
     app.get('/items', async (req, res) =>{
-      console.log('query: ', req.query);
-      const page = parseInt(req.query.page);
-      const pageSize = parseInt(req.query.pageSize);
       const query = {};
       const cursor = itemCollection.find(query);
-      let items;
-      if(page || pageSize){
-        items = await cursor.skip(page*pageSize).limit(pageSize).toArray();
-      }else{
-        const items = await cursor.toArray();
-      }
-      
+      const items = await cursor.toArray();
       res.send(items);
     });
 
@@ -62,6 +53,25 @@ async function run(){
       const deletedItem = await itemCollection.deleteOne(query);
       res.send(deletedItem);
     })
+
+    //item by page
+
+    app.get('/product', async (req, res) =>{
+      console.log('query: ', req.query);
+      const page = parseInt(req.query.page);
+      const pageSize = parseInt(req.query.pageSize);
+      const query = {};
+      const cursor = itemCollection.find(query);
+
+      let products;
+      if(page || pageSize){
+        products = await cursor.skip(page*pageSize).limit(pageSize).toArray();
+      }else{
+        products = await cursor.toArray();
+      }
+      
+      res.send(products);
+    });
 
     //count item
     app.get('/itemCount', async (req, res) =>{
